@@ -25,7 +25,7 @@ const server = createServer(app);
 
 const corsOptions = {
   origin: [
-    "*"
+    "https://polling-app-gray.vercel.app"
   ],
   methods: ["GET", "POST"],
   credentials: true
