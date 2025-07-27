@@ -28,17 +28,21 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Connect to the actual backend server
-    const newSocket = io('http://localhost:3001', {
-      autoConnect: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
+    // Get backend URL from environment variables
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    
+    // Connect to the backend server using environment variables
+    const newSocket = io(backendUrl, {
+      autoConnect: import.meta.env.VITE_SOCKET_AUTO_CONNECT !== 'false',
+      reconnection: import.meta.env.VITE_SOCKET_RECONNECTION !== 'false',
+      reconnectionAttempts: parseInt(import.meta.env.VITE_SOCKET_RECONNECTION_ATTEMPTS) || 5,
+      reconnectionDelay: parseInt(import.meta.env.VITE_SOCKET_RECONNECTION_DELAY) || 1000,
       forceNew: true,
     });
 
     newSocket.on('connect', () => {
       console.log('Connected to server:', newSocket.id);
+      console.log('Backend URL:', backendUrl);
       setIsConnected(true);
     });
 
